@@ -121,7 +121,8 @@ reads.hel.dist <- metaMDSdist(m_reads.hel.df, distance = "bray", trymax =100, au
 reads.hel.dist.factors <- as.data.frame(as.matrix(reads.hel.dist)) %>%
   dplyr::mutate(sample = rownames(.)) %>%
   dplyr::select(sample) %>%
-  separate(sample, c("CruiseID", "Station", "Layer", "Fraction"), sep = "_")
+  separate(sample, c("CruiseID", "Station", "Layer", "Fraction"), sep = "_", remove = F)
+reads.hel.dist.factors <- left_join(reads.hel.dist.factors, water_mass, by = "sample")
 head(reads.hel.dist.factors)
 Fraction.disper <- betadisper(reads.hel.dist, reads.hel.dist.factors$Fraction)
 Fraction.disper.test <- permutest(Fraction.disper, perm = 999)
@@ -146,36 +147,29 @@ Layer.disper.dis.df <- as.data.frame(Layer.disper.dis) %>%
 #Layer.disper.res:The result of PERMDISP (Factor =  Layer)
 write.table(Layer.disper.res, "./data/Layer.disper.res.txt", quote = F, sep = "\t", col.names = NA, row.names = T, append = F)
 
-  
-#PERMDISP plot
-Dispersal_plot <- ggplot(Layer.disper.dis.df) +
-  geom_boxplot(aes(x = Layer, y = dis.center)) +
-  labs(x = "Fraction", y = "distance to center") +
-  scale_fill_manual(values = c("white", "darkgrey"))+
-  NULL
-graphics.off()
-plot(Dispersal_plot)
-dev.off()
+#
+WM.disper <- betadisper(reads.hel.dist, reads.hel.dist.factors$water_mass)
+WM.disper.test <- permutest(WM.disper, perm = 999)
+WM.disper.res <- as.data.frame(WM.disper.test$tab)
+WM.disper.dis <- WM.disper$distances
+WM.disper.dis.df <- as.data.frame(WM.disper.dis) %>%
+  dplyr::rename(dis.center = WM.disper.dis) %>%
+  dplyr::mutate(sample = rownames(.)) %>%
+  separate(sample, c("CruiseID", "Station", "Layer", "Fraction"), sep = "_") 
+WM.disper.dis.df <- left_join(WM.disper.dis.df, water_mass, by = "sample")
+#WM.disper.res:The result of PERMDISP (Factor =  water_mass)
+write.table(WM.disper.res, "./data/WM.disper.res.txt", quote = F, sep = "\t", col.names = NA, row.names = T, append = F)
 
-Dispersal_plot <- ggplot(Fraction.disper.dis.df) +
-  geom_boxplot(aes(x = Fraction, y = dis.center)) +
-  labs(x = "Fraction", y = "distance to center") +
-  scale_fill_manual(values = c("white", "darkgrey"))+
-  NULL
-graphics.off()
-plot(Dispersal_plot)
-dev.off()
 
 
 ##PERMANOVA
 m_reads.hel.dist <- as.matrix(reads.hel.dist)
 reads.hel.dist.factors
 
-PERMANOVA.dist <- adonis2(m_reads.hel.dist ~ Layer+Fraction, data = reads.hel.dist.factors, permutations = 999, method="bray")
+PERMANOVA.dist <- adonis2(m_reads.hel.dist ~ water_mass+Layer+Fraction, data = reads.hel.dist.factors, permutations = 999, method="bray")
 PERMANOVA.dist
 PERMANOVA.dist <- as.data.frame(PERMANOVA.dist)
 write.table(PERMANOVA.dist, "./data/PERMANOVA.dist.txt", quote = F, sep = "\t", col.names = NA, row.names = T, append = F)
-
 #####
 
 
