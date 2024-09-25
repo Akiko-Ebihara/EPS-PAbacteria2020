@@ -202,8 +202,6 @@ Taxa.FLPA.ga <- Taxa.FLPA.df %>%
 head(Taxa.FLPA.ga) 
 #Taxa.FLPA.ga:SampleID, Taxa, Station, Layer, Fraction, and RA
 
-
-
 #####
 
 
@@ -220,8 +218,8 @@ plot_Fig.2 <- ggplot(Taxa.all.ga, aes(x=Station, y=RA, fill=Taxa)) +
   #scale_fill_nejm() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   theme(legend.position = "right")+
-  scale_fill_manual(values=c("green", "#8b0000", "red", "yellow", "orange", 
-                             "blue", "purple", "cyan", "#f0f0f0", "black"))+
+  scale_fill_manual(values=c("#408040", "#8c4646", "#cc2929", "#cccc00", "#cc6600", 
+                             "#4747b3", "#995c99", "#00cccc", "#999999", "black"))+
   theme(axis.text.x = element_text(size = 6))+
   xlab("Station")+
   ylab("Relative abundance (%)")+
@@ -230,279 +228,15 @@ plot_Fig.2 <- ggplot(Taxa.all.ga, aes(x=Station, y=RA, fill=Taxa)) +
 graphics.off()
 plot(plot_Fig.2)
 graphics.off()
-png("./figure/plot_Fig.2.png", height=6, width=6, units="in", res=200)
-par(mfrow=c(1, 1))
-plot(plot_Fig.2)
-dev.off()
-
-graphics.off()
-tiff("./figure/plot_Fig.2.tif", height=6, width=6, units="in", res=300)
+tiff("./figure/plot_Fig.2.tif", height=18, width=18, units="cm", res=300)
 par(mfrow=c(1, 1))
 plot(plot_Fig.2)
 dev.off()
 
 
-
-###Fig.3 : Category####
-plot_Fig.3 <- ggplot(Category.all.ga, aes(x=Station, y=RA, fill=Category)) + 
-  facet_grid(Layer ~ Fraction)+
-  theme_bw()+
-  theme(strip.background = element_rect(fill = "#373737", linewidth = 1), 
-        strip.text.x = element_text(color = "white", face = "bold", size = 12), 
-        strip.text.y = element_text(color = "white", face = "bold", size = 12), 
-        axis.title.y = element_text(face = "bold", size = 14, colour = "black"),
-        legend.text = element_text(size = 12, colour ="black"))+
-  geom_bar(stat = "identity") + 
-  #scale_fill_nejm() + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  theme(legend.position = "right")+
-  scale_fill_manual(values=c("#42ff42", "#4242ff", "#ff4242", "#f9f9f9", "#2f2f2f", "lightgrey"))+
-  theme(axis.text.x = element_text(size = 6))+
-  xlab("Station")+
-  ylab("Relative abundance (%)")+
-  NULL
-
-graphics.off()
-plot(plot_Fig.3)
-graphics.off()
-png("./figure/plot_Fig.3.png", height=6, width=6, units="in", res=200)
-par(mfrow=c(1, 1))
-plot(plot_Fig.3)
-dev.off()
-
-graphics.off()
-tiff("./figure/plot_Fig.3.tif", height=6, width=6, units="in", res=300)
-par(mfrow=c(1, 1))
-plot(plot_Fig.3)
-dev.off()
-
-
-###Fig. 4 (RDA plot)####
-p_RDA_map <- ggplot(scores.df, mapping = aes(x = RDA1, y = RDA2)) + 
-  xlab(paste0("RDA1 (", format(axes.perc[1], nsmall = 1), "%)")) +
-  ylab(paste0("RDA2 (", format(axes.perc[2], nsmall = 1), "%)")) +
-  NULL
-
-plot_Fig.4 <- p1_RDA_map +
-  theme_classic(base_size = 14) +
-  geom_point(data=species.score.df, aes(x=RDA1, y=RDA2, color=Category, fill = Category), 
-             shape = 21, stroke = 1, alpha = 0.6, size = 2.5) +
-  scale_color_manual(values = c("green", "blue", "#dcdcdc", "#dcdcdc"))+
-  scale_fill_manual(values = c("green", "blue", "#dcdcdc", "#dcdcdc"))+
-  geom_point(data=sites.score.df, aes(x = RDA1, y = RDA2, shape = Fraction_Layer), 
-             size = 4, color = "#dc143c") + 
-  geom_text_repel(data=sites.score.df, size = 3.5, colour = "#770B20", aes(label = Station))+
-  scale_shape_manual(values = c(19, 15, 10, 7)) +
-  geom_segment(aes(x = 0, y = 0, xend = RDA1, yend = RDA2), arrow=arrow(), 
-               data = ExpVar.cor.df, linewidth =2, alpha = 0.3, colour = "black") +
-  geom_text(data = ExpVar.cor.df, aes(x = text.posi.RDA1, y = text.posi.RDA2), color = "black", 
-            size = 5, fontface = "bold", label = ExpVar.cor.df$Variables) + 
-  theme(legend.text = element_text(size = 16, colour ="black")) +
-  labs(shape = "Fraction-Layer") + 
-  xlim(-1.6, 2.2) +
-  ylim(-2.7, 2.0) +
-  NULL
-
-graphics.off()
-plot(plot_Fig.4)
-graphics.off()
-png("./figure/plot_Fig.4.png", height=6, width=8, units="in", res=200)
-par(mfrow=c(1, 1))
-plot(plot_Fig.4)
-dev.off()
-
-graphics.off()
-tiff("./figure/plot_Fig.4.tif", height=6, width=8, units="in", res=300)
-par(mfrow=c(1, 1))
-plot(plot_Fig.4)
-dev.off()
-
-
-###plot_Fig.5####
-plot_Fig.5.Alpha <- p1_RDA_map +
-  geom_point(data=species.score.Alpha, aes(x=RDA1, y=RDA2), , color="#dc143c", fill = "#dc143c", 
-             shape = 21, stroke = 1, alpha = 0.9, size = 2.5) +
-  geom_segment(aes(x = 0, y = 0, xend = RDA1, yend = RDA2), arrow=arrow(), 
-               data = ExpVar.cor.df, linewidth =2, alpha = 0.3, colour = "black") +
-  geom_text(data = ExpVar.cor.df, aes(x = text.posi.RDA1, y = text.posi.RDA2), color = "black", 
-            fontface = "bold", label = ExpVar.cor.df$Variables, size = 5) + 
-  xlim(-1.6, 2.2) +
-  ylim(-2.7, 2.0) +
-  annotate("text", x = -0.4, y = -2.2, label="Alphaptoreobacteria",
-           family ="serif", fontface="bold", colour="black", size=8, alpha = 0.7) +
-  theme_classic(base_size = 16) +
-  NULL
-graphics.off()
-plot(plot_Fig.5.Alpha)
-graphics.off()
-
-
-plot_Fig.5.Gamma <- p1_RDA_map +
-  geom_point(data=species.score.Gamma, aes(x=RDA1, y=RDA2), , color="#dc143c", fill = "#dc143c", 
-             shape = 21, stroke = 1, alpha = 0.9, size = 2.5) +
-  geom_segment(aes(x = 0, y = 0, xend = RDA1, yend = RDA2), arrow=arrow(), 
-               data = ExpVar.cor.df, linewidth =2, alpha = 0.3, colour = "black") +
-  geom_text(data = ExpVar.cor.df, aes(x = text.posi.RDA1, y = text.posi.RDA2), color = "black", 
-            fontface = "bold", label = ExpVar.cor.df$Variables, size = 5) + 
-  xlim(-1.6, 2.2) +
-  ylim(-2.7, 2.0) +
-  annotate("text", x = -0.35, y = -2.2, label="Gammaptoreobacteria",
-           family ="serif", fontface="bold", colour="black", size = 8, alpha = 0.7) +
-  theme_classic(base_size = 16) +
-  NULL
-graphics.off()
-plot(plot_Fig.5.Gamma)
-graphics.off()
-
-
-plot_Fig.5.Bac <- p1_RDA_map +
-  geom_point(data=species.score.Bac, aes(x=RDA1, y=RDA2), , color="#dc143c", fill = "#dc143c", 
-             shape = 21, stroke = 1, alpha = 0.9, size = 2.5) +
-  geom_segment(aes(x = 0, y = 0, xend = RDA1, yend = RDA2), arrow=arrow(), 
-               data = ExpVar.cor.df, linewidth =2, alpha = 0.3, colour = "black") +
-  geom_text(data = ExpVar.cor.df, aes(x = text.posi.RDA1, y = text.posi.RDA2), color = "black", 
-            fontface = "bold", label = ExpVar.cor.df$Variables, size = 5) + 
-  xlim(-1.6, 2.2) +
-  ylim(-2.7, 2.0) +
-  annotate("text", x = -0.5, y = -2.2, label="Bacteroidia",
-           family ="serif", fontface="bold", colour="black", size = 8, alpha = 0.7) +
-  theme_classic(base_size = 16) +
-  NULL
-graphics.off()
-plot(plot_Fig.5.Bac)
-graphics.off()
-
-
-plot_Fig.5.Plan <- p1_RDA_map +
-  geom_point(data=species.score.Plan, aes(x=RDA1, y=RDA2), , color="#dc143c", fill = "#dc143c", 
-             shape = 21, stroke = 1, alpha = 0.9, size = 2.5) +
-  geom_segment(aes(x = 0, y = 0, xend = RDA1, yend = RDA2), arrow=arrow(), 
-               data = ExpVar.cor.df, linewidth =2, alpha = 0.3, colour = "black") +
-  geom_text(data = ExpVar.cor.df, aes(x = text.posi.RDA1, y = text.posi.RDA2), color = "black", 
-            fontface = "bold", label = ExpVar.cor.df$Variables, size = 5) + 
-  xlim(-1.6, 2.2) +
-  ylim(-2.7, 2.0) +
-  annotate("text", x = -0.4, y = -2.2, label="Planctomycetota",
-           family ="serif", fontface="bold", colour="black", size = 8, alpha = 0.7) +
-  theme_classic(base_size = 16) +
-  NULL
-graphics.off()
-plot(plot_Fig.5.Plan)
-graphics.off()
-
-
-plot_Fig.5.Bdell <- p1_RDA_map +
-  geom_point(data=species.score.Bdell, aes(x=RDA1, y=RDA2), , color="#dc143c", fill = "#dc143c", 
-             shape = 21, stroke = 1, alpha = 0.9, size = 2.5) +
-  geom_segment(aes(x = 0, y = 0, xend = RDA1, yend = RDA2), arrow=arrow(), 
-               data = ExpVar.cor.df, linewidth =2, alpha = 0.3, colour = "black") +
-  geom_text(data = ExpVar.cor.df, aes(x = text.posi.RDA1, y = text.posi.RDA2), color = "black", 
-            fontface = "bold", label = ExpVar.cor.df$Variables, size = 5) + 
-  xlim(-1.6, 2.2) +
-  ylim(-2.7, 2.0) +
-  annotate("text", x = -0.4, y = -2.2, label="Bdellovibrionota",
-           family ="serif", fontface="bold", colour="black", size = 8, alpha = 0.7) +
-  theme_classic(base_size = 16) +
-  NULL
-graphics.off()
-plot(plot_Fig.5.Bdell)
-graphics.off()
-
-
-plot_Fig.5.Desul <- p1_RDA_map +
-  geom_point(data=species.score.Desul, aes(x=RDA1, y=RDA2), , color="#dc143c", fill = "#dc143c", 
-             shape = 21, stroke = 1, alpha = 0.9, size = 2.5) +
-  geom_segment(aes(x = 0, y = 0, xend = RDA1, yend = RDA2), arrow=arrow(), 
-               data = ExpVar.cor.df, linewidth =2, alpha = 0.3, colour = "black") +
-  geom_text(data = ExpVar.cor.df, aes(x = text.posi.RDA1, y = text.posi.RDA2), color = "black", 
-            fontface = "bold", label = ExpVar.cor.df$Variables, size = 5) + 
-  xlim(-1.6, 2.2) +
-  ylim(-2.7, 2.0) +
-  annotate("text", x = -0.4, y = -2.2, label="Desulfobacterota",
-           family ="serif", fontface="bold", colour="black", size = 8, alpha = 0.7) +
-  theme_classic(base_size = 16) +
-  NULL
-graphics.off()
-plot(plot_Fig.5.Desul)
-graphics.off()
-
-#
-plot_Fig.5 <- ggpubr::ggarrange(plot_Fig.5.Alpha, plot_Fig.5.Gamma, plot_Fig.5.Bac,
-                                plot_Fig.5.Bdell, plot_Fig.5.Desul, plot_Fig.5.Plan,
-                                 ncol = 3, nrow = 2)
-
-graphics.off()
-plot(plot_Fig.5)
-graphics.off()
-png("./figure/plot_Fig.5.png", height=10, width=16, units="in", res=200)
-par(mfrow=c(1, 1))
-plot(plot_Fig.5)
-dev.off()
-
-graphics.off()
-tiff("./figure/plot_Fig.5.tif", height=10, width=16, units="in", res=300)
-par(mfrow=c(1, 1))
-plot(plot_Fig.5)
-dev.off()
-
-
-##plot_Fig.6####
-head(species.score.df)
-species.score.sel <- species.score.df %>%
-  dplyr::filter(Taxa == "Alphaproteobacteria" | Taxa == "Gammaproteobacteria" | Taxa == "Bacteroidia" 
-                | Taxa == "Planctomycetota" | Taxa == "Bdellovibrionota" | Taxa == "Desulfobacterota") %>%
-  transform(Taxa = factor(Taxa, levels = Taxonomy.level))
-#Fig.6a
-plot_Fig.6a <- ggplot(species.score.sel, aes(x = Taxa, y = RDA1)) +
-  geom_boxplot(width=0.5,lwd=1.5) +
-  geom_hline(yintercept=0, color="#373737",linewidth=1) +
-  theme_light()+
-  theme(axis.text.x = element_text(colour = "black", family ="serif", face = "bold", size = 12, 
-                                   angle = 60, hjust = 1), 
-        axis.text.y = element_text(colour = "black", face = "bold", size = 10), 
-        axis.title.y = element_text(face = "bold", size = 14, colour = "black"))+
-  labs(x = NULL, y = "RDA1")  +
-  NULL
-
-
-#Fig.6b
-plot_Fig.6b <- ggplot(species.score.sel, aes(x = Taxa, y = RDA2)) +
-  geom_boxplot(width=0.5,lwd=1.5) +
-  geom_hline(yintercept=0, color="#373737",linewidth=1) +
-  theme_light()+
-  theme(axis.text.x = element_text(colour = "black", family ="serif", face = "bold", size = 12, 
-                                   angle = 60, hjust = 1), 
-        axis.text.y = element_text(colour = "black", face = "bold", size = 10), 
-        axis.title.y = element_text(face = "bold", size = 14, colour = "black"))+
-  labs(x = NULL, y = "RDA2")  +
-  NULL
-
-#Fig.6
-plot_Fig.6 <- ggpubr::ggarrange(plot_Fig.6a, plot_Fig.6b,
-                                  ncol = 2,
-                                  labels = c("(A)", "(B)"))
-
-graphics.off()
-plot(plot_Fig.6)
-graphics.off()
-png("./figure/plot_Fig.6.png", height=6, width=9, units="in", res=200)
-par(mfrow=c(1, 1))
-plot(plot_Fig.6)
-dev.off()
-
-graphics.off()
-tiff("./figure/plot_Fig.6.tif", height=6, width=9, units="in", res=300)
-par(mfrow=c(1, 1))
-plot(plot_Fig.6)
-dev.off()
-#####
-
-
-###supplementary Figures####
-##NMDS
-#plot_Fig.S3####
-plot_Fig.S3 <- ggplot(data.scoresD, aes(x = NMDS1, y = NMDS2)) + 
-  geom_point(size = 5, aes(shape = Fraction, colour = Layer))+
+###Fig.3: NMDS####
+plot_Fig.3 <- ggplot(data.scoresD, aes(x = NMDS1, y = NMDS2)) + 
+  geom_point(size = 4.5, aes(shape = Layer, colour = Fraction), alpha = 0.9)+
   theme(
     axis.text.y = element_text(colour = "black", size = 12, face = "bold"), 
     axis.text.x = element_text(colour = "black", face = "bold", size = 12), 
@@ -513,29 +247,259 @@ plot_Fig.S3 <- ggplot(data.scoresD, aes(x = NMDS1, y = NMDS2)) +
     panel.background = element_blank(), panel.border = element_rect(colour = "black", fill = NA, linewidth = 1.2),
     legend.key=element_blank()) + 
   geom_text_repel(size = 3, colour = "#373737", aes(label = Station))+
-  labs(x = "NMDS1", colour = "Layer", y = "NMDS2", shape = "Fraction")  + 
-  scale_colour_manual(values = c("grey", "black"))+
-  scale_shape_manual(values = c(19, 17, 8))+
+  labs(x = "NMDS1", colour = "Fraction", y = "NMDS2", shape = "Layer")  + 
+  scale_colour_manual(values = c("#440154", "#fde725", "#21918c"))+
+  scale_shape_manual(values = c(16, 17))+
   annotate("text", x = 0.9, y = -0.5, label="Stress = 0.173",
            fontface="bold", colour="black", size=5) +
   NULL
 graphics.off()
-plot(plot_Fig.S3)
+plot(plot_Fig.3)
 graphics.off()
-png("./figure/plot_Fig.S3.png", height=5, width=7, units="in", res=200)
+tiff("./figure/plot_Fig.3.tif", height=13.5, width=18, units="cm", res=300)
 par(mfrow=c(1, 1))
-plot(plot_Fig.S3)
-dev.off()
-
-graphics.off()
-tiff("./figure/plot_Fig.S3.tif", height=5, width=7, units="in", res=300)
-par(mfrow=c(1, 1))
-plot(plot_Fig.S3)
+plot(plot_Fig.3)
 dev.off()
 
 
-##plot_Fig.S4
-plot_Fig.S4_D0 <- ggplot(Adiv.LSmeans_D0, aes(x=Layer, y=Least.Sq.Mean, colour = Fraction)) +
+###Fig.4 : Category####
+plot_Fig.4 <- ggplot(Category.all.ga, aes(x=Station, y=RA, fill=Category)) + 
+  facet_grid(Layer ~ Fraction)+
+  theme_bw()+
+  theme(strip.background = element_rect(fill = "#373737", linewidth = 1), 
+        strip.text.x = element_text(color = "white", face = "bold", size = 14), 
+        strip.text.y = element_text(color = "white", face = "bold", size = 14), 
+        axis.title.y = element_text(face = "bold", size = 14, colour = "black"),
+        axis.title.x = element_text(face = "bold", size = 12, colour = "black"),
+        legend.text = element_text(size = 14, colour ="black"))+
+  geom_bar(stat = "identity") + 
+  #scale_fill_nejm() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme(legend.position = "right")+
+  scale_fill_manual(values=c("#440154", "#fde725", "#e6e6e6", "#21918c", "#2f2f2f", "#999999"))+
+  theme(axis.text.x = element_text(size = 8))+
+  xlab("Station")+
+  ylab("Relative abundance (%)")+
+  NULL
+
+graphics.off()
+plot(plot_Fig.4)
+graphics.off()
+tiff("./figure/plot_Fig.4.tif", height=18, width=18, units="cm", res=300)
+par(mfrow=c(1, 1))
+plot(plot_Fig.4)
+dev.off()
+
+
+###Fig. 5 (RDA plot)####
+p1_RDA_map <- ggplot(scores.df, mapping = aes(x = RDA1, y = RDA2)) + 
+  xlab(paste0("RDA1 (", format(axes.perc[1], nsmall = 1), "%)")) +
+  ylab(paste0("RDA2 (", format(axes.perc[2], nsmall = 1), "%)")) +
+  NULL
+
+plot_Fig.5 <- p1_RDA_map +
+  theme_classic(base_size = 12) +
+  geom_point(data=species.score.df, aes(x=RDA1, y=RDA2, color=Category, fill = Category), 
+             shape = 21, stroke = 1, alpha = 0.6, size = 2) +
+  scale_color_manual(values = c("#440154", "#fde725", "#e6e6e6", "#2f2f2f"))+
+  scale_fill_manual(values = c("#440154", "#fde725",  "#e6e6e6", "#2f2f2f"))+
+  geom_point(data=sites.score.df, aes(x = RDA1, y = RDA2, shape = Fraction_Layer), 
+             size = 3, color = "#dc143c") + 
+  geom_text_repel(data=sites.score.df, size = 3, colour = "#770B20", aes(label = Station))+
+  scale_shape_manual(values = c(19, 15, 10, 7)) +
+  geom_segment(aes(x = 0, y = 0, xend = RDA1, yend = RDA2), arrow=arrow(), 
+               data = ExpVar.cor.df, linewidth =1.2, alpha = 0.3, colour = "black") +
+  geom_text(data = ExpVar.cor.df, aes(x = text.posi.RDA1, y = text.posi.RDA2), color = "black", 
+            size = 4, fontface = "bold", label = ExpVar.cor.df$Variables) + 
+  theme(legend.text = element_text(size = 12, colour ="black")) +
+  labs(shape = "Fraction-Layer") + 
+  xlim(-1.6, 2.2) +
+  ylim(-2.7, 2.0) +
+  NULL
+
+graphics.off()
+plot(plot_Fig.5)
+graphics.off()
+tiff("./figure/plot_Fig.5.tif", height=13.5, width=18, units="cm", res=300)
+par(mfrow=c(1, 1))
+plot(plot_Fig.5)
+dev.off()
+
+
+###plot_Fig.6####
+plot_Fig.6.Alpha <- p1_RDA_map +
+  geom_point(data=species.score.Alpha, aes(x=RDA1, y=RDA2), , color="#dc143c", fill = "#dc143c", 
+             shape = 21, alpha = 0.9, size = 1.4) +
+  geom_segment(aes(x = 0, y = 0, xend = RDA1, yend = RDA2), arrow=arrow(length = unit(0.08, "inches")), 
+               data = ExpVar.cor.df, linewidth =1, alpha = 0.3, colour = "black") +
+  geom_text(data = ExpVar.cor.df, aes(x = text.posi.RDA1, y = text.posi.RDA2), color = "black", 
+            fontface = "bold", label = ExpVar.cor.df$Variables, size = 2.2) + 
+  xlim(-1.6, 2.2) +
+  ylim(-2.7, 2.0) +
+  annotate("text", x = -0.4, y = -2.2, label="Alphaptoreobacteria",
+           family ="serif", fontface="bold", colour="black", size = 3.5, alpha = 0.7) +
+  theme_classic(base_size = 8) +
+  NULL
+
+plot_Fig.6.Gamma <- p1_RDA_map +
+  geom_point(data=species.score.Gamma, aes(x=RDA1, y=RDA2), , color="#dc143c", fill = "#dc143c", 
+             shape = 21, alpha = 0.9, size = 1.4) +
+  geom_segment(aes(x = 0, y = 0, xend = RDA1, yend = RDA2), arrow=arrow(length = unit(0.08, "inches")), 
+               data = ExpVar.cor.df, linewidth =1, alpha = 0.3, colour = "black") +
+  geom_text(data = ExpVar.cor.df, aes(x = text.posi.RDA1, y = text.posi.RDA2), color = "black", 
+            fontface = "bold", label = ExpVar.cor.df$Variables, size = 2.2) +  
+  xlim(-1.6, 2.2) +
+  ylim(-2.7, 2.0) +
+  annotate("text", x = -0.35, y = -2.2, label="Gammaptoreobacteria",
+           family ="serif", fontface="bold", colour="black", size = 3.5, alpha = 0.7) +
+  theme_classic(base_size = 8) +
+  NULL
+
+plot_Fig.6.Bac <- p1_RDA_map +
+  geom_point(data=species.score.Bac, aes(x=RDA1, y=RDA2), , color="#dc143c", fill = "#dc143c", 
+             shape = 21, alpha = 0.9, size = 1.4) +
+  geom_segment(aes(x = 0, y = 0, xend = RDA1, yend = RDA2), arrow=arrow(length = unit(0.08, "inches")), 
+               data = ExpVar.cor.df, linewidth =1, alpha = 0.3, colour = "black") +
+  geom_text(data = ExpVar.cor.df, aes(x = text.posi.RDA1, y = text.posi.RDA2), color = "black", 
+            fontface = "bold", label = ExpVar.cor.df$Variables, size = 2.2) + 
+  xlim(-1.6, 2.2) +
+  ylim(-2.7, 2.0) +
+  annotate("text", x = -0.5, y = -2.2, label="Bacteroidia",
+           family ="serif", fontface="bold", colour="black", size = 3.5, alpha = 0.7) +
+  theme_classic(base_size = 8) +
+  NULL
+
+plot_Fig.6.Plan <- p1_RDA_map +
+  geom_point(data=species.score.Plan, aes(x=RDA1, y=RDA2), , color="#dc143c", fill = "#dc143c", 
+             shape = 21, alpha = 0.9, size = 1.4) +
+  geom_segment(aes(x = 0, y = 0, xend = RDA1, yend = RDA2), arrow=arrow(length = unit(0.08, "inches")), 
+               data = ExpVar.cor.df, linewidth =1, alpha = 0.3, colour = "black") +
+  geom_text(data = ExpVar.cor.df, aes(x = text.posi.RDA1, y = text.posi.RDA2), color = "black", 
+            fontface = "bold", label = ExpVar.cor.df$Variables, size = 2.2) + 
+  xlim(-1.6, 2.2) +
+  ylim(-2.7, 2.0) +
+  annotate("text", x = -0.4, y = -2.2, label="Planctomycetota",
+           family ="serif", fontface="bold", colour="black", size = 3.5, alpha = 0.7) +
+  theme_classic(base_size = 8) +
+  NULL
+
+plot_Fig.6.Bdell <- p1_RDA_map +
+  geom_point(data=species.score.Bdell, aes(x=RDA1, y=RDA2), , color="#dc143c", fill = "#dc143c", 
+             shape = 21, alpha = 0.9, size = 1.4) +
+  geom_segment(aes(x = 0, y = 0, xend = RDA1, yend = RDA2), arrow=arrow(length = unit(0.08, "inches")), 
+               data = ExpVar.cor.df, linewidth =1, alpha = 0.3, colour = "black") +
+  geom_text(data = ExpVar.cor.df, aes(x = text.posi.RDA1, y = text.posi.RDA2), color = "black", 
+            fontface = "bold", label = ExpVar.cor.df$Variables, size = 2.2) +  
+  xlim(-1.6, 2.2) +
+  ylim(-2.7, 2.0) +
+  annotate("text", x = -0.4, y = -2.2, label="Bdellovibrionota",
+           family ="serif", fontface="bold", colour="black", size = 3.5, alpha = 0.7) +
+  theme_classic(base_size = 8) +
+  NULL
+
+plot_Fig.6.Desul <- p1_RDA_map +
+  geom_point(data=species.score.Desul, aes(x=RDA1, y=RDA2), , color="#dc143c", fill = "#dc143c", 
+             shape = 21, alpha = 0.9, size = 1.4) +
+  geom_segment(aes(x = 0, y = 0, xend = RDA1, yend = RDA2), arrow=arrow(length = unit(0.08, "inches")), 
+               data = ExpVar.cor.df, linewidth =1, alpha = 0.3, colour = "black") +
+  geom_text(data = ExpVar.cor.df, aes(x = text.posi.RDA1, y = text.posi.RDA2), color = "black", 
+            fontface = "bold", label = ExpVar.cor.df$Variables, size = 2.2) + 
+  xlim(-1.6, 2.2) +
+  ylim(-2.7, 2.0) +
+  annotate("text", x = -0.4, y = -2.2, label="Desulfobacterota",
+           family ="serif", fontface="bold", colour="black", size = 3.5, alpha = 0.7) +
+  theme_classic(base_size = 7) +
+  NULL
+
+plot_Fig.6 <- ggpubr::ggarrange(plot_Fig.6.Alpha, plot_Fig.6.Gamma, plot_Fig.6.Bac,
+                                plot_Fig.6.Bdell, plot_Fig.6.Desul, plot_Fig.6.Plan,
+                                ncol = 3, nrow = 2)
+
+graphics.off()
+plot(plot_Fig.6)
+graphics.off()
+tiff("./figure/plot_Fig.6.tif", height=11.25, width=18, units="cm", res=300)
+par(mfrow=c(1, 1))
+plot(plot_Fig.6)
+dev.off()
+
+
+##plot_Fig.7####
+head(species.score.df)
+species.score.sel <- species.score.df %>%
+  dplyr::filter(Taxa == "Alphaproteobacteria" | Taxa == "Gammaproteobacteria" | Taxa == "Bacteroidia" 
+                | Taxa == "Planctomycetota" | Taxa == "Bdellovibrionota" | Taxa == "Desulfobacterota") %>%
+  transform(Taxa = factor(Taxa, levels = Taxonomy.level))
+#Fig.7a
+plot_Fig.7a <- ggplot(species.score.sel, aes(x = Taxa, y = RDA1)) +
+  geom_boxplot(width=0.5,lwd=0.8) +
+  geom_hline(yintercept=0, color="#373737",linewidth=0.5) +
+  theme_light()+
+  theme(axis.text.x = element_text(colour = "black", family ="serif", face = "bold", size = 12, 
+                                   angle = 60, hjust = 1), 
+        axis.text.y = element_text(colour = "black", face = "bold", size = 8), 
+        axis.title.y = element_text(face = "bold", size = 12, colour = "black"))+
+  labs(x = NULL, y = "RDA1")  +
+  NULL
+
+#Fig.7b
+plot_Fig.7b <- ggplot(species.score.sel, aes(x = Taxa, y = RDA2)) +
+  geom_boxplot(width=0.5,lwd=0.8) +
+  geom_hline(yintercept=0, color="#373737",linewidth=0.5) +
+  theme_light()+
+  theme(axis.text.x = element_text(colour = "black", family ="serif", face = "bold", size = 12, 
+                                   angle = 60, hjust = 1), 
+        axis.text.y = element_text(colour = "black", face = "bold", size = 8), 
+        axis.title.y = element_text(face = "bold", size = 12, colour = "black"))+
+  labs(x = NULL, y = "RDA2")  +
+  ylim(-2.9, 2.1)+
+  NULL
+
+plot_Fig.7 <- ggpubr::ggarrange(plot_Fig.7a, NULL, plot_Fig.7b,
+                                ncol = 3,  align='v', widths = c(1, 0.05, 1),
+                                labels = c("(A)", "", "(B)"), 
+                                font.label = list(size = 10))
+
+graphics.off()
+plot(plot_Fig.7)
+graphics.off()
+tiff("./figure/plot_Fig.7.tif", height=12, width=18, units="cm", res=300)
+par(mfrow=c(1, 1))
+plot(plot_Fig.7)
+dev.off()
+
+
+###Sup. Fig####
+#Fig. S3: NMDS####
+NMDS_plot <- ggplot(data.scoresD, aes(x = NMDS1, y = NMDS2)) + 
+  geom_point(size = 4.5, aes(shape = Fraction, colour = water_mass), alpha = 0.9)+
+  theme(
+    axis.text.y = element_text(colour = "black", size = 12, face = "bold"), 
+    axis.text.x = element_text(colour = "black", face = "bold", size = 12), 
+    legend.text = element_text(size = 12, face ="bold", colour ="black"), 
+    legend.position = "right", axis.title.y = element_text(face = "bold", size = 14), 
+    axis.title.x = element_text(face = "bold", size = 14, colour = "black"), 
+    legend.title = element_text(size = 14, colour = "black", face = "bold"), 
+    panel.background = element_blank(), panel.border = element_rect(colour = "black", fill = NA, linewidth = 1.2),
+    legend.key=element_blank()) + 
+  geom_text_repel(size = 3, colour = "#373737", aes(label = Station))+
+  labs(x = "NMDS1", colour = "Water mass", y = "NMDS2", shape = "Layer")  + 
+  scale_colour_manual(values = c("#fde725", "#35b779", "#31688e", "#440154"))+
+  scale_shape_manual(values = c(16, 17, 13))+
+  annotate("text", x = 0.9, y = -0.5, label="Stress = 0.173",
+           fontface="bold", colour="black", size=5) +
+  NULL
+graphics.off()
+plot(NMDS_plot)
+graphics.off()
+tiff("./figure/NMDS_plot.tif", height=5, width=7, units="in", res=300)
+par(mfrow=c(1, 1))
+plot(NMDS_plot)
+dev.off()
+
+
+##Fig. S4: a-diversity####
+plot_LSMeans_D0 <- ggplot(Adiv.LSmeans_D0, aes(x=Layer, y=Least.Sq.Mean, colour = Fraction)) +
   geom_point(size = 4)+
   geom_line(aes(group = Fraction), linewidth = 1.5) +
   scale_colour_manual(values = viridis(3))+
@@ -547,7 +511,8 @@ plot_Fig.S4_D0 <- ggplot(Adiv.LSmeans_D0, aes(x=Layer, y=Least.Sq.Mean, colour =
   theme(legend.position = "none") +
   NULL
 
-plot_Fig.S4_D1 <- ggplot(Adiv.LSmeans_D1, aes(x=Layer, y=Least.Sq.Mean, colour = Fraction)) + 
+#
+plot_LSMeans_D1 <- ggplot(Adiv.LSmeans_D1, aes(x=Layer, y=Least.Sq.Mean, colour = Fraction)) + 
   geom_point(size = 4)+
   geom_line(aes(group = Fraction), linewidth = 1.5) +
   scale_colour_manual(values = viridis(3))+
@@ -559,7 +524,8 @@ plot_Fig.S4_D1 <- ggplot(Adiv.LSmeans_D1, aes(x=Layer, y=Least.Sq.Mean, colour =
   ylim(15, 90) +
   NULL
 
-plot_Fig.S4_D2 <- ggplot(Adiv.LSmeans_D2, aes(x=Layer, y=Least.Sq.Mean, colour = Fraction)) + 
+#
+plot_LSMeans_D2 <- ggplot(Adiv.LSmeans_D2, aes(x=Layer, y=Least.Sq.Mean, colour = Fraction)) + 
   geom_point(size = 4)+
   geom_line(aes(group = Fraction), linewidth = 1.5) +
   scale_colour_manual(values = viridis(3))+
@@ -570,172 +536,27 @@ plot_Fig.S4_D2 <- ggplot(Adiv.LSmeans_D2, aes(x=Layer, y=Least.Sq.Mean, colour =
   theme(legend.position = "none") +
   NULL
 
-plot_Fig.S4_legend.pre <- ggplot(Adiv.LSmeans_D2, aes(x=Layer, y=Least.Sq.Mean, colour = Fraction)) + 
+#
+plot_LSMeans_legend.pre <- ggplot(Adiv.LSmeans_D2, aes(x=Layer, y=Least.Sq.Mean, colour = Fraction)) + 
   geom_point(size = 4)+
   geom_line(aes(group = Fraction), linewidth = 1.5) +
   scale_colour_manual(values = viridis(3))+
   theme_bw(base_size = 25)+
   NULL
 
-plot_Fig.S4_legend <- cowplot::get_legend(plot_Fig.S4_legend.pre)
+plot_LSMeans_legend <- cowplot::get_legend(plot_LSMeans_legend.pre)
 
-plot_Fig.S4 <- ggpubr::ggarrange(plot_Fig.S4_D0, plot_Fig.S4_D1, plot_Fig.S4_D2, plot_Fig.S4_legend,
+#
+plot_LSMeans <- ggpubr::ggarrange(plot_LSMeans_D0, plot_LSMeans_D1, plot_LSMeans_D2, plot_LSMeans_legend,
                   nrow = 2, ncol = 2,
                   labels = c("(A)", "(B)", "(C)"))
 
 graphics.off()
-plot(plot_Fig.S4)
+plot(plot_LSMeans)
 graphics.off()
-png("./figure/plot_Fig.S4.png", height=8, width=8, units="in", res=200)
+png("./figure/plot_LSMeans.png", height=8, width=8, units="in", res=200)
 par(mfrow=c(1, 1))
-plot(plot_Fig.S4)
-dev.off()
-
-graphics.off()
-tiff("./figure/plot_Fig.S4.tif", height=8, width=8, units="in", res=300)
-par(mfrow=c(1, 1))
-plot(plot_Fig.S4)
-dev.off()
-
-
-####Additional figures####
-###Fig.x1: Taxonomic compositions Category FL/PA####
-plot_Fig.x1 <- ggplot(Taxa.FLPA.ga, aes(x=Station, y=RA, fill=Taxa)) + 
-  facet_grid(Layer ~ Fraction)+
-  theme_bw()+
-  theme(strip.background = element_rect(fill = "#373737", linewidth = 1), 
-        strip.text.x = element_text(color = "white", face = "bold", size = 12), 
-        strip.text.y = element_text(color = "white", face = "bold", size = 12), 
-        axis.title.y = element_text(face = "bold", size = 14, colour = "black"),
-        legend.text = element_text(size = 12, colour ="black"))+
-  geom_bar(stat = "identity") + 
-  #scale_fill_nejm() + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  theme(legend.position = "right")+
-  scale_fill_manual(values=c("green", "red", "yellow", "orange", 
-                             "blue", "purple", "cyan", "#f0f0f0", "black"))+
-  theme(axis.text.x = element_text(size = 6))+
-  xlab("Station")+
-  ylab("Relative abundance (%)")+
-  NULL
-graphics.off()
-plot(plot_Fig.x1)
-graphics.off()
-png("./figure/plot_Fig.x1.png", height=6, width=6, units="in", res=200)
-par(mfrow=c(1, 1))
-plot(plot_Fig.x1)
-dev.off()
-
-
-###Fig.x2: Taxonomic compositions Category FL/PA####
-plot_Fig.x2 <- ggplot(Taxa.FL.ga, aes(x=Station, y=RA, fill=Taxa)) + 
-  facet_grid(Layer ~ Fraction)+
-  theme_bw()+
-  theme(strip.background = element_rect(fill = "#373737", linewidth = 1), 
-        strip.text.x = element_text(color = "white", face = "bold", size = 12), 
-        strip.text.y = element_text(color = "white", face = "bold", size = 12), 
-        axis.title.y = element_text(face = "bold", size = 14, colour = "black"),
-        legend.text = element_text(size = 12, colour ="black"))+
-  geom_bar(stat = "identity") + 
-  #scale_fill_nejm() + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  theme(legend.position = "right")+
-  scale_fill_manual(values=c("green", "#8b0000", "red", "yellow", "orange", 
-                             "blue", "#f0f0f0", "black"))+
-  theme(axis.text.x = element_text(size = 6))+
-  xlab("Station")+
-  ylab("Relative abundance (%)")+
-  NULL
-graphics.off()
-plot(plot_Fig.x2)
-graphics.off()
-png("./figure/plot_Fig.x2.png", height=6, width=6, units="in", res=200)
-par(mfrow=c(1, 1))
-plot(plot_Fig.x2)
-dev.off()
-
-
-###Fig.x3: Taxonomic compositions Category SK####
-plot_Fig.x3 <- ggplot(Taxa.ga.SK, aes(x=Station, y=RA, fill=Taxa)) + 
-  facet_grid(Layer ~ Fraction)+
-  theme_bw()+
-  theme(strip.background = element_rect(fill = "#373737", linewidth = 1), 
-        strip.text.x = element_text(color = "white", face = "bold", size = 12), 
-        strip.text.y = element_text(color = "white", face = "bold", size = 12), 
-        axis.title.y = element_text(face = "bold", size = 14, colour = "black"), 
-        legend.text = element_text(size = 12, colour ="black"))+
-  geom_bar(stat = "identity") + 
-  #scale_fill_nejm() + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  theme(legend.position = "right")+
-  scale_fill_manual(values=c("green", "red", "yellow", "orange", 
-                             "blue", "purple", "cyan", "#f0f0f0", "black"))+
-  theme(axis.text.x = element_text(size = 6))+
-  xlab("Station")+
-  ylab("Relative abundance (%)")+
-  NULL
-graphics.off()
-plot(plot_Fig.x3)
-graphics.off()
-png("./figure/plot_Fig.x3.png", height=6, width=6, units="in", res=200)
-par(mfrow=c(1, 1))
-plot(plot_Fig.x3)
-dev.off()
-
-
-###Fig.x4: Taxonomic compositions Category SS####
-plot_Fig.x4 <- ggplot(Taxa.ga.SS, aes(x=Station, y=RA, fill=Taxa)) + 
-  facet_grid(Layer ~ Fraction)+
-  theme_bw()+
-  theme(strip.background = element_rect(fill = "#373737", linewidth = 1), 
-        strip.text.x = element_text(color = "white", face = "bold", size = 12), 
-        strip.text.y = element_text(color = "white", face = "bold", size = 12), 
-        axis.title.y = element_text(face = "bold", size = 14, colour = "black"), 
-        legend.text = element_text(size = 12, colour ="black"))+
-  geom_bar(stat = "identity") + 
-  #scale_fill_nejm() + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  theme(legend.position = "right")+
-  scale_fill_manual(values=c("red", "yellow", "orange", 
-                             "blue", "purple", "cyan", "#f0f0f0", "black"))+
-  theme(axis.text.x = element_text(size = 6))+
-  xlab("Station")+
-  ylab("Relative abundance (%)")+
-  NULL
-graphics.off()
-plot(plot_Fig.x4)
-graphics.off()
-png("./figure/plot_Fig.x4.png", height=6, width=6, units="in", res=200)
-par(mfrow=c(1, 1))
-plot(plot_Fig.x4)
-dev.off()
-
-
-###Fig.x5: Taxonomic compositions Category SK####
-plot_Fig.x5 <- ggplot(Taxa.ga.SKSS, aes(x=Station, y=RA, fill=Taxa)) + 
-  facet_grid(Layer ~ Fraction)+
-  theme_bw()+
-  theme(strip.background = element_rect(fill = "#373737", linewidth = 1), 
-        strip.text.x = element_text(color = "white", face = "bold", size = 12), 
-        strip.text.y = element_text(color = "white", face = "bold", size = 12), 
-        axis.title.y = element_text(face = "bold", size = 14, colour = "black"), 
-        legend.text = element_text(size = 12, colour ="black"))+
-  geom_bar(stat = "identity") + 
-  #scale_fill_nejm() + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  theme(legend.position = "right")+
-  scale_fill_manual(values=c("green", "red", "yellow", "orange", 
-                             "blue", "purple", "cyan", "#f0f0f0", "black"))+
-  theme(axis.text.x = element_text(size = 6))+
-  xlab("Station")+
-  ylab("Relative abundance (%)")+
-  NULL
-graphics.off()
-plot(plot_Fig.x5)
-graphics.off()
-png("./figure/plot_Fig.x5.png", height=6, width=6, units="in", res=200)
-par(mfrow=c(1, 1))
-plot(plot_Fig.x5)
+plot(plot_LSMeans)
 dev.off()
 
 
